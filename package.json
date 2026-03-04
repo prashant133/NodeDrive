@@ -1,0 +1,32 @@
+{
+  "name": "nodedrive",
+  "version": "1.0.0",
+  "description": "A modular Node.js backend that allows users to securely upload, store, and manage files. Built with Express, MongoDB, Redis, and JWT authentication.",
+  "keywords": [
+    "drive"
+  ],
+  "homepage": "https://github.com/prashant133/NodeDrive#readme",
+  "bugs": {
+    "url": "https://github.com/prashant133/NodeDrive/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prashant133/NodeDrive.git"
+  },
+  "license": "ISC",
+  "author": "Prashant Deshar",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.1",
+    "mongoose": "^9.2.4",
+    "morgan": "^1.10.1",
+    "nodemon": "^3.1.14"
+  }
+}
