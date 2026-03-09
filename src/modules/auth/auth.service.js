@@ -8,8 +8,8 @@ const jwt = require("jsonwebtoken");
 //   });
 // };
 
-const registration = async (username, email, password) => {
-  const existingUser = await User.findone({ email });
+const registration = async ({ username, email, password }) => {
+  const existingUser = await User.findOne({ email });
 
   if (existingUser) {
     throw new ApiError(400, "User already exists");
@@ -21,9 +21,14 @@ const registration = async (username, email, password) => {
     password,
   });
 
-  return user;
+  return {
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
+  };
 };
-
-
 
 module.exports = { registration };

@@ -3,7 +3,8 @@ const authService = require("./auth.service");
 const ApiResponse = require("../../utils/ApiResponse");
 
 const registration = asyncHandler(async (req, res, next) => {
-  const user = await authService.registration(req.body);
+  const { username, email, password } = req.body;
+  const user = await authService.registration({ username, email, password });
 
   return res
     .status(200)
