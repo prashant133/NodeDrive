@@ -8,10 +8,15 @@ const app = express();
 
 // middlewares
 app.use(express.json());
-(app, use(morgan("dev")));
+app.use(morgan("dev"));
 
 // global error
 app.use(errorMiddleware);
 app.use(notFound);
+
+// routes
+const authRouter = require("./modules/auth/auth.route");
+
+app.use("/auth", authRouter);
 
 module.exports = app;
