@@ -2,11 +2,11 @@ const ApiError = require("../../utils/ApiError");
 const User = require("./user.model");
 const jwt = require("jsonwebtoken");
 
-// const generateToken = (user) => {
-//   return jwt.sign({ userId: user_id }, process.env.JWT_SECRET, {
-//     expiresIn: "7d",
-//   });
-// };
+const generateToken = (user) => {
+  return jwt.sign({ userId: user_id }, process.env.JWT_SECRET, {
+    expiresIn: "7d",
+  });
+};
 
 const registration = async ({ username, email, password }) => {
   const existingUser = await User.findOne({ email });
@@ -24,11 +24,36 @@ const registration = async ({ username, email, password }) => {
   return {
     user: {
       id: user._id,
-      name: user.name,
+      name: user.username,
       email: user.email,
       role: user.role,
     },
   };
 };
 
-module.exports = { registration };
+const login = async ({ email, password }) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(404, "Invalid credentials");
+  }
+
+  const isValidPassword = await user.isPassword(password);
+
+  if (!isValidPassword) {
+    throw new ApiError(404, "Invalid password");
+  }
+
+  const token = generateToken(user);
+
+  return {
+    token,
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+    },
+  };
+};
+
+module.exports = { registration, login };

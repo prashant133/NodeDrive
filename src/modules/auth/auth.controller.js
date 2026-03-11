@@ -11,4 +11,14 @@ const registration = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, user, "User Created successfully"));
 });
 
-module.exports = { registration };
+const login = asyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  const user = await authService.login({ email, password });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "userlogged in successfully"));
+});
+
+module.exports = { registration, login };
