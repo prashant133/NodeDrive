@@ -3,7 +3,7 @@ const User = require("./user.model");
 const jwt = require("jsonwebtoken");
 
 const generateToken = (user) => {
-  return jwt.sign({ userId: user_id }, process.env.JWT_SECRET, {
+  return jwt.sign({ userId: user }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
 };
@@ -35,13 +35,13 @@ const login = async ({ email, password }) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new ApiError(404, "Invalid credentials");
+    throw new ApiError(401, "Invalid credentials");
   }
 
   const isValidPassword = await user.isPassword(password);
 
   if (!isValidPassword) {
-    throw new ApiError(404, "Invalid password");
+    throw new ApiError(401, "Invalid password");
   }
 
   const token = generateToken(user);
