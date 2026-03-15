@@ -1,14 +1,16 @@
-// const uploadFileValidator = require("./file.validate");
-// const authMiddleware = require("../../middlewares/auth.middleware");
-// const fileController = require("./file.controller");
+const uploadFileValidator = require("./file.validate");
+const authMiddleware = require("../../middlewares/auth.middleware");
+const fileController = require("./file.controller");
+const upload = require("../../config/multer");
 
-// const router = requrie("mongoose").Router();
+const router = require("express").Router();
 
-// router.post(
-//   "/file",
-//   authMiddleware,
-//   uploadFileValidator,
-//   fileController.fileUploadController,
-// );
+router.post(
+  "/upload",
+  authMiddleware,
+  upload.array("file", 12),
+  uploadFileValidator,
+  fileController.fileUploadController,
+);
 
-// module.exports = router;
+module.exports = router;

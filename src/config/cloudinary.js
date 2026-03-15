@@ -13,7 +13,7 @@ const uploadOnCloudinary = async (localFilePath, foldername) => {
       return "file is not on local space";
     }
 
-    const uploadFile = cloudinary.uploader.upload(localFilePath, {
+    const uploadFile = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
       folder: foldername,
     });

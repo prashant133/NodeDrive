@@ -12,13 +12,13 @@ const storage = multer.diskStorage({
 
     cb(null, uploadPath);
   },
-  filename: function (req, file, db) {
+  filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, file.fieldname + "-" + uniqueSuffix);
   },
 });
 
-const fileFilter = (req, file, next) => {
+const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|pdf/;
 
   const extname = allowedTypes.test(

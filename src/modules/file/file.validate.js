@@ -1,9 +1,10 @@
-// const ApiResponse = require("../../utils/ApiResponse");
+const ApiError = require("../../utils/ApiError");
 
-// const uploadFileValidator = (req, res, next) => {
-//   if (!req.file) {
-//     return res.status(400).json(new ApiResponse(400, "File is required"));
-//   }
-// };
+const uploadFileValidator = (req, res, next) => {
+  if (!req.files) {
+    throw new ApiError(400, "file is required");
+  }
+  next();
+};
 
-// module.exports = uploadFileValidator;
+module.exports = uploadFileValidator;

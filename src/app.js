@@ -10,13 +10,12 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-
-
 // routes
 const authRouter = require("./modules/auth/auth.route");
+const fileRouter = require("./modules/file/file.route");
 
 app.use("/auth/", authRouter);
-
+app.use("/file/", fileRouter);
 
 // global error
 app.use(errorMiddleware);
