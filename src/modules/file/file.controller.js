@@ -15,7 +15,30 @@ const fileUploadController = asyncHanlder(async (req, res, next) => {
 });
 
 const fileDeleteController = asyncHanlder(async (req, res, next) => {
-  console.log("file");
+  const fileId = req.params.fileId;
+  const ownerId = req.user.userId;
+
+  const deletedFile = await fileService.deleteFiles({ ownerId, fileId });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, deletedFile, "File deleted successfully"));
 });
 
-module.exports = { fileUploadController, fileDeleteController };
+const getMyFilesController = asyncHanlder(async (req, res, next) => {
+  const ownerId = req.user.userId;
+
+  const file = await fileService.getMyFiles({ ownerId });
+
+  // console.log(file)
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, file, "files successfully fetched"));
+});
+
+module.exports = {
+  fileUploadController,
+  fileDeleteController,
+  getMyFilesController
+};

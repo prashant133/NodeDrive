@@ -13,4 +13,12 @@ router.post(
   fileController.fileUploadController,
 );
 
+router.delete(
+  "/delete/:fileId",
+  authMiddleware,
+  fileController.fileDeleteController,
+);
+
+router.get("/get", authMiddleware, fileController.getMyFilesController);
+
 module.exports = router;

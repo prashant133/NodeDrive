@@ -1,6 +1,7 @@
 const uploadOnCloudinary = require("../../config/cloudinary");
 const ApiError = require("../../utils/ApiError");
 const File = require("./file.model");
+const cloudinary = require("cloudinary").v2;
 
 const fileUpload = async ({ files, ownerId }) => {
   if (!files || files.length === 0) {
@@ -25,4 +26,30 @@ const fileUpload = async ({ files, ownerId }) => {
   return uploadedFiles;
 };
 
-module.exports = { fileUpload };
+const deleteFiles = async ({ ownerId, fileId }) => {
+  const file = await File.findById(fileId);
+
+  if (!file) {
+    throw new ApiError(404, "File not found");
+  }
+
+  console.log(file);
+
+  if (file.ownerId.toString() != ownerId.toString()) {
+    throw new ApiError(401, "Not allowed");
+  }
+
+  await cloudinary.uploader.destroy(file.storedName);
+
+  const deletedFiles = await File.findByIdAndDelete(file);
+
+  return deletedFiles;
+};
+
+const getMyFiles = async ({ ownerId }) => {
+  return await File.find({ ownerId }).sort({ createdAt: -1 });
+
+  //  console.log(files)
+};
+
+module.exports = { fileUpload, deleteFiles, getMyFiles };
