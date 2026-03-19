@@ -48,8 +48,20 @@ const deleteFiles = async ({ ownerId, fileId }) => {
 
 const getMyFiles = async ({ ownerId }) => {
   return await File.find({ ownerId }).sort({ createdAt: -1 });
-
-  //  console.log(files)
 };
 
-module.exports = { fileUpload, deleteFiles, getMyFiles };
+const downloadFile = async ({ ownerId, fileId }) => {
+  const file = await File.findById(fileId);
+
+  if (!file) {
+    throw new ApiError(404, "file not found");
+  }
+
+  if (file.ownerId.toString() !== ownerId) {
+    throw new ApiError(403, "Not allowed");
+  }
+
+  return file.path;
+};
+
+module.exports = { fileUpload, deleteFiles, getMyFiles, downloadFile };

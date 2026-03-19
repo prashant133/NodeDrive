@@ -37,8 +37,18 @@ const getMyFilesController = asyncHanlder(async (req, res, next) => {
     .json(new ApiResponse(200, file, "files successfully fetched"));
 });
 
+const downloadFile = asyncHanlder(async (req, res, next) => {
+  const fileId = req.params.fileId;
+  const ownerId = req.user.userId;
+
+  const downlodedFile = await fileService.downloadFile({ ownerId, fileId });
+
+  return res.redirect(downlodedFile);
+});
+
 module.exports = {
   fileUploadController,
   fileDeleteController,
-  getMyFilesController
+  getMyFilesController,
+  downloadFile,
 };

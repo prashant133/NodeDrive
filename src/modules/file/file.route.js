@@ -21,4 +21,6 @@ router.delete(
 
 router.get("/get", authMiddleware, fileController.getMyFilesController);
 
+router.get("/download/:fileId", authMiddleware, fileController.downloadFile);
+
 module.exports = router;
