@@ -13,9 +13,11 @@ app.use(morgan("dev"));
 // routes
 const authRouter = require("./modules/auth/auth.route");
 const fileRouter = require("./modules/file/file.route");
+const shareRouter = require("./modules/share/share.route");
 
 app.use("/auth/", authRouter);
 app.use("/file/", fileRouter);
+app.use("/share/", shareRouter);
 
 // global error
 app.use(errorMiddleware);
