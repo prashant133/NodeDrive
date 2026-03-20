@@ -8,7 +8,17 @@ const createShareLink = asyncHandler(async (req, res, next) => {
 
   const shareLink = await shareService.createShareLink({ ownerId, fileId });
 
-  return res.status(200).json(new ApiResponse(200, shareLink, "file link created"));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, shareLink, "file link created"));
 });
 
-module.exports = { createShareLink };
+const accessSharedFile = asyncHandler(async (req, res, next) => {
+  const token = req.params.token;
+
+  const fileUrl = await shareService.accessSharedFile({ token });
+
+  return res.redirect(fileUrl);
+});
+
+module.exports = { createShareLink, accessSharedFile };

@@ -26,4 +26,29 @@ const createShareLink = async ({ fileId, ownerId }) => {
   return { record, shareUrl: `${process.env.BASE_URL}share/${token}` };
 };
 
-module.exports = { createShareLink };
+const accessSharedFile = async ({ token }) => {
+  const share = await Share.findOne({token});
+
+  if (!share) {
+    throw new ApiError(404, "Link Not found");
+  }
+
+  if (!share.isActive) {
+    throw new ApiError(403, "Link is inactive");
+  }
+  if (share.expiresAt && new Date() > share.expiresAt) {
+    throw new ApiError(403, "Link has expired");
+  }
+
+  const file = await File.findById(share.fileId);
+  if (!file) {
+    throw new ApiError(404, "File not found");
+  }
+
+  share.downloadCount += 1;
+  await share.save();
+
+  return file.path;
+};
+
+module.exports = { createShareLink, accessSharedFile };
