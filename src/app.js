@@ -16,6 +16,11 @@ const fileRouter = require("./modules/file/file.route");
 const shareRouter = require("./modules/share/share.route");
 const analyticRouter = require("./modules/analytic/analytic.route");
 
+// redis
+const { connectRedis } = require("./config/redis");
+
+connectRedis();
+
 app.use("/auth/", authRouter);
 app.use("/file/", fileRouter);
 app.use("/share/", shareRouter);

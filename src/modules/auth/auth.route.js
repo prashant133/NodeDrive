@@ -1,6 +1,7 @@
 const validatorError = require("../../middlewares/validateError.middleware");
 const { registrationValidator, loginValidator } = require("./auth.validate");
 const authController = require("./auth.controller");
+const loginRateLimit = require("../../middlewares/loginRateLimit.middleware");
 
 const router = require("express").Router();
 
@@ -11,6 +12,6 @@ router.post(
   authController.registration,
 );
 
-router.post("/login", loginValidator, validatorError, authController.login);
+router.post("/login",loginRateLimit, loginValidator, validatorError, authController.login);
 
 module.exports = router;
