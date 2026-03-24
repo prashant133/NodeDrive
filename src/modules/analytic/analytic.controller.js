@@ -12,4 +12,15 @@ const getFileStats = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, stats, "File stats fetched successfully"));
 });
 
-module.exports = { getFileStats };
+const getDownloadStats = asyncHandler(async (req, res, next) => {
+  const ownerId = req.user.userId;
+  const { fileId } = req.params;
+
+  const stats = await analyticService.getDownlaodStats({ ownerId, fileId });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, stats, "data fetch successfully"));
+});
+
+module.exports = { getFileStats, getDownloadStats };
