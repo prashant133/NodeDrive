@@ -2,6 +2,7 @@ const uploadOnCloudinary = require("../../config/cloudinary");
 const ApiError = require("../../utils/ApiError");
 const File = require("./file.model");
 const cloudinary = require("cloudinary").v2;
+const { client } = require("../../config/redis");
 
 const fileUpload = async ({ files, ownerId }) => {
   if (!files || files.length === 0) {
@@ -23,6 +24,8 @@ const fileUpload = async ({ files, ownerId }) => {
     });
     uploadedFiles.push(savedFile);
   }
+  // invalidate cache after upload
+  await client.del(`files:${ownerId}`);
   return uploadedFiles;
 };
 
@@ -41,13 +44,27 @@ const deleteFiles = async ({ ownerId, fileId }) => {
 
   await cloudinary.uploader.destroy(file.storedName);
 
-  const deletedFiles = await File.findByIdAndDelete(file);
+  const deletedFiles = await File.findByIdAndDelete(fileId);
+
+  // invalidate cache AFTER delete
+  await client.del(`files:${ownerId}`);
 
   return deletedFiles;
 };
 
 const getMyFiles = async ({ ownerId }) => {
-  return await File.find({ ownerId }).sort({ createdAt: -1 });
+  const cacheKey = `files:${ownerId}`;
+
+  const cachedFiles = await client.get(cacheKey);
+
+  if (cachedFiles) {
+    return JSON.parse(cachedFiles);
+  }
+  const files = await File.find({ ownerId }).sort({ createdAt: -1 });
+
+  await client.setEx(cacheKey, 60 * 5, JSON.stringify(files));
+
+  return files;
 };
 
 const downloadFile = async ({ ownerId, fileId }) => {
